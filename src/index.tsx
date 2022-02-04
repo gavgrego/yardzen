@@ -2,9 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { purple } from "@mui/material/colors";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -24,7 +25,7 @@ const theme = createTheme({
   palette: {
     primary: {
       light: "#757ce8",
-      main: purple[400],
+      main: "#000",
       dark: "#002884",
       contrastText: "#fff",
     },
@@ -35,20 +36,25 @@ const theme = createTheme({
       contrastText: "#000",
     },
   },
+  typography: {
+    body1: {
+      fontFamily: "'Open Sans', sans-serif",
+      fontWeight: 400,
+    },
+    h2: {
+      fontWeight: 600,
+      fontSize: "1.25rem",
+    },
+  },
 });
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          {/* <Route path="expenses" element={<Expenses />} /> */}
-          {/* <Route path="invoices" element={<Invoices />} /> */}
-        </Routes>
+    <DndProvider backend={HTML5Backend}>
+      <ThemeProvider theme={theme}>
         <App />
-      </BrowserRouter>
-    </ThemeProvider>
+      </ThemeProvider>
+    </DndProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
