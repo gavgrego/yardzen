@@ -1,5 +1,12 @@
-import { Paper, Grid, Typography, useTheme, Card } from "@mui/material";
-import React, { useRef } from "react";
+import {
+  Paper,
+  Grid,
+  Typography,
+  useTheme,
+  Card,
+  Tooltip,
+} from "@mui/material";
+import React, { useRef, useState } from "react";
 import "./styles.scss";
 import formatType from "../../utils/formatType";
 
@@ -9,6 +16,7 @@ type Props = {
   name: string;
   lowPrice: string;
   highPrice: string;
+  isDisabled: boolean;
   handleItemToggle: () => void;
 };
 
@@ -17,41 +25,44 @@ const Item: React.FC<Props> = ({
   lowPrice,
   highPrice,
   type,
+  id,
+  isDisabled,
   handleItemToggle,
 }) => {
-  const card = useRef(null);
-  const toggleItem = () => {
-    handleItemToggle();
-    console.log(card.current);
-  };
-
   return (
-    <Card
-      ref={card}
-      onClick={toggleItem}
-      className={`item-card item-card__${type}`}
-      raised={true}
+    <Tooltip
+      title={
+        isDisabled ? "Only one item per category may be selected at a time" : ""
+      }
     >
-      <Grid container direction="column">
-        <Grid item>
-          <Typography variant="h2">{name}</Typography>
-        </Grid>
-        <Grid container item>
+      <Card
+        onClick={!isDisabled ? handleItemToggle : null}
+        className={`item-card item-card__${type} ${
+          isDisabled ? "disabled" : "enabled"
+        } `}
+        raised={true}
+      >
+        <Grid container direction="column" className="item-card__contain">
           <Grid item>
-            <Typography color="primary">${lowPrice}</Typography>
+            <Typography variant="h5">{name}</Typography>
           </Grid>
-          <Grid item>&nbsp;-&nbsp;</Grid>
+          <Grid container item className="item-card__price-range">
+            <Grid item>
+              <Typography color="primary">${lowPrice}</Typography>
+            </Grid>
+            <Grid item>&nbsp;-&nbsp;</Grid>
+            <Grid item>
+              <Typography color="primary">${highPrice}</Typography>
+            </Grid>
+          </Grid>
           <Grid item>
-            <Typography color="primary">${highPrice}</Typography>
+            <Typography className="item-card__type" color="primary">
+              {formatType(type)}
+            </Typography>
           </Grid>
         </Grid>
-        <Grid item>
-          <Typography className="item-card__type" color="primary">
-            {formatType(type)}
-          </Typography>
-        </Grid>
-      </Grid>
-    </Card>
+      </Card>
+    </Tooltip>
   );
 };
 

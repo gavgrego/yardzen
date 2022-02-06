@@ -1,5 +1,5 @@
 .item-card {
-  cursor: pointer;
+  cursor: default;
   margin: 0.5rem;
   padding: 0.5rem;
 
@@ -7,9 +7,25 @@
     opacity: 0.6;
   }
 
-  &__disabled {
+  &.disabled {
     opacity: 0.2;
-    pointer-events: none;
+  }
+  &:not(.disabled) {
+    cursor: pointer;
+  }
+
+  &__contain.MuiGrid-root {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+    @media (min-width: 768px) {
+      flex-direction: column;
+    }
+  }
+
+  &__price-range.MuiGrid-root {
+    width: auto;
   }
 
   &__name {

@@ -4,11 +4,11 @@ const checkPriceRange = (
   highRange: number
 ) => {
   if (userBudget > lowRange && userBudget < highRange) {
-    return "You are currently within your budget.";
+    return "Congrats! You are within your budget.";
   } else if (userBudget < highRange) {
-    return "Your selected items are above your current budget.";
+    return "You are currently above your budget.";
   } else if (userBudget > lowRange) {
-    return "Your selected items are below your current budget.";
+    return "You are currently below your budget.";
   }
 };
 
