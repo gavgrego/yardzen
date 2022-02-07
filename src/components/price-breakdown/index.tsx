@@ -1,7 +1,7 @@
-import { Grid, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import checkPriceRange from "../../utils/checkPriceRange";
+import { Grid, Typography, useTheme } from "@mui/material";
 import formatPrice from "../../utils/formatPrice";
+import React, { useState, useEffect } from "react";
+import checkPriceRange from "../../utils/checkPriceRange";
 import "./styles.scss";
 
 type Props = {

@@ -57,7 +57,8 @@ const Budget: React.FC = () => {
     // I'm thinking this below could be done in a more performant way, I don't like the idea of just
     // iterating through all the items when doing the id/type comparison – this will get hairy when # of items increases.
     // I think using something like Algolia is a would be fantastic for potentially filtering/sorting hundreds (or thousands) of items
-    // otherwise, maybe would split the items up into their own "Items" components based on their type, so state for each type of item can be managed more easily
+    // otherwise, maybe would split the items up into their own "Items" components based on their type, so state for each type of item can be managed by category instead of items as a whole.
+    // If a follow-up interview is scheduled, I may wind up refactoring it prior to the meeting.
 
     // checking to see if the item is currently in the list of active items
     if (activeItems.includes(id)) {
@@ -67,7 +68,6 @@ const Budget: React.FC = () => {
       setHighRange(highRange - parseInt(highPrice));
       setLowRange(lowRange - parseInt(lowPrice));
 
-      // look into refactoring this to be more performant
       items.forEach((item: Item) => {
         if (item.id === id) {
           item.isDisabled = false;
@@ -80,7 +80,6 @@ const Budget: React.FC = () => {
       setHighRange(highRange + parseInt(highPrice));
       setLowRange(lowRange + parseInt(lowPrice));
 
-      // look into refactoring this to be more performant
       items.forEach((item: Item) => {
         if (item.id !== id && item.type === type) {
           item.isDisabled = true;
@@ -100,58 +99,61 @@ const Budget: React.FC = () => {
   };
 
   return (
-    <main>
-      <Grid className="app-container" container direction="column">
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <Grid item container className="items">
-            {items
-              ?.sort((a, b) => (a.type > b.type ? 1 : -1))
-              .map((item: DocumentData, index: number) => {
-                return (
-                  <Item
-                    handleItemToggle={() =>
-                      handleItemToggle(
-                        item.lowPrice,
-                        item.highPrice,
-                        item.type,
-                        index
-                      )
-                    }
-                    key={index}
-                    id={index}
-                    type={item.type}
-                    name={item.name}
-                    lowPrice={formatPrice(item.lowPrice)}
-                    highPrice={formatPrice(item.highPrice)}
-                    isDisabled={item.isDisabled}
-                  />
-                );
-              })}
-          </Grid>
-        )}
-        <Grid
-          container
-          justifyContent="space-between"
-          marginTop={2}
-          className="price-breakdown"
-        >
-          <Grid item>
-            <PriceBreakdown
-              customerBudget={userBudget as number}
-              lowRange={lowRange}
-              highRange={highRange}
-            />
-          </Grid>
-          <Grid item>
-            <Button variant="contained" onClick={resetSelection}>
-              Reset Selections
-            </Button>
-          </Grid>
+    <Grid
+      sx={{ minHeight: "100vh" }}
+      justifyContent="space-between"
+      container
+      direction="column"
+      className="budget"
+    >
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <Grid item container className="items">
+          {items
+            ?.sort((a, b) => (a.type > b.type ? 1 : -1))
+            .map((item: DocumentData, index: number) => {
+              return (
+                <Item
+                  handleItemToggle={() =>
+                    handleItemToggle(
+                      item.lowPrice,
+                      item.highPrice,
+                      item.type,
+                      index
+                    )
+                  }
+                  key={index}
+                  id={index}
+                  type={item.type}
+                  name={item.name}
+                  lowPrice={formatPrice(item.lowPrice)}
+                  highPrice={formatPrice(item.highPrice)}
+                  isDisabled={item.isDisabled}
+                />
+              );
+            })}
+        </Grid>
+      )}
+      <Grid
+        container
+        justifyContent="space-between"
+        className="price-breakdown"
+      >
+        <Grid item>
+          <PriceBreakdown
+            customerBudget={userBudget as number}
+            lowRange={lowRange}
+            highRange={highRange}
+          />
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={resetSelection}>
+            Reset Selections
+          </Button>
         </Grid>
       </Grid>
-    </main>
+    </Grid>
   );
 };
 

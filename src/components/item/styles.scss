@@ -19,6 +19,7 @@
     flex-wrap: nowrap;
     justify-content: space-between;
 
+    // put breakpoint into variable
     @media (min-width: 768px) {
       flex-direction: column;
     }

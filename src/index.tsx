@@ -99,7 +99,7 @@ ReactDOM.render(
             path="*"
             element={
               <main style={{ padding: "1rem" }}>
-                <p>Invalid route</p>
+                <p>404</p>
               </main>
             }
           />
