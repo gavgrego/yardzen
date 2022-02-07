@@ -1,14 +1,7 @@
-import {
-  Paper,
-  Grid,
-  Typography,
-  useTheme,
-  Card,
-  Tooltip,
-} from "@mui/material";
-import React, { useRef, useState } from "react";
-import "./styles.scss";
+import { Card, Grid, Tooltip, Typography } from "@mui/material";
+import React from "react";
 import formatType from "../../utils/formatType";
+import "./styles.scss";
 
 type Props = {
   id: number;
@@ -25,7 +18,6 @@ const Item: React.FC<Props> = ({
   lowPrice,
   highPrice,
   type,
-  id,
   isDisabled,
   handleItemToggle,
 }) => {

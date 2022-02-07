@@ -1,7 +1,7 @@
-import { Grid, Typography, useTheme } from "@mui/material";
-import formatPrice from "../../utils/formatPrice";
-import React, { useState, useEffect } from "react";
+import { Grid, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import checkPriceRange from "../../utils/checkPriceRange";
+import formatPrice from "../../utils/formatPrice";
 import "./styles.scss";
 
 type Props = {
@@ -15,17 +15,7 @@ const PriceBreakdown: React.FC<Props> = ({
   highRange,
   customerBudget,
 }) => {
-  const theme = useTheme();
-
   const [budgetStatus, setBudgetStatus] = useState<string>("");
-  const [budgetText, setBudgetText] = useState<string>("");
-  const [budgetColor, setBudgetColor] = useState<string>("");
-
-  useEffect(() => {
-    if (budgetStatus === "within") {
-      setBudgetText("");
-    }
-  }, [budgetStatus]);
 
   // changing the budget information text whenever either price range values change
   useEffect(() => {
@@ -39,6 +29,7 @@ const PriceBreakdown: React.FC<Props> = ({
           Your selected items have a price range of:
         </Typography>
       </Grid>
+
       <Grid container direction="row" spacing={2} item>
         <Grid item>
           <Typography variant="h5">${formatPrice(lowRange)}</Typography>
@@ -50,6 +41,9 @@ const PriceBreakdown: React.FC<Props> = ({
       </Grid>
       <Grid item>
         <Typography variant="h5">{budgetStatus}</Typography>
+      </Grid>
+      <Grid item className="price-breakdown__heading">
+        <Typography variant="h5">Your budget is ${customerBudget}</Typography>
       </Grid>
     </Grid>
   );

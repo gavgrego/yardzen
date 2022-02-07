@@ -1,11 +1,11 @@
+import { createTheme, ThemeProvider } from "@mui/material";
+import { green, red, yellow } from "@mui/material/colors";
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
-import App from "./App";
-import { createStyles, createTheme, ThemeProvider } from "@mui/material";
-import { green, purple, red, yellow } from "@mui/material/colors";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import Budget from "./pages/Budget/index";
+import Welcome from "./pages/Welcome/index";
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -70,15 +70,42 @@ const theme = createTheme({
       fontSize: "1.25rem",
     },
   },
+  components: {
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          textAlign: "center",
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        inputAdornedStart: {
+          marginLeft: ".25rem",
+        },
+      },
+    },
+  },
 });
 
 ReactDOM.render(
   <React.StrictMode>
-    <DndProvider backend={HTML5Backend}>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </DndProvider>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="budget" element={<Budget />} />
+          <Route
+            path="*"
+            element={
+              <main style={{ padding: "1rem" }}>
+                <p>Invalid route</p>
+              </main>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
