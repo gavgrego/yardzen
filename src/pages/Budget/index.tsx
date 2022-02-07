@@ -19,7 +19,7 @@ const Budget: React.FC = () => {
       navigate("/");
     } else {
       // Grab items and set to state
-      // setting additional ID and isDisabled properties before setting to items state
+      // setting additional ID and isDisabled properties before setting to items state, also maniuplate item price format
       useGetFirebase.then((items) => {
         setIsLoading(false);
         items
@@ -27,6 +27,8 @@ const Budget: React.FC = () => {
           .forEach((item: Item, index) => {
             item.id = index;
             item.isDisabled = false;
+            item.highPrice = Number(formatPrice(item.highPrice));
+            item.lowPrice = Number(formatPrice(item.lowPrice));
           });
         setItems(items);
       });
@@ -49,24 +51,24 @@ const Budget: React.FC = () => {
   const [activeItems, setActiveItems] = useState<Array<number>>([]);
 
   const handleItemToggle = (
-    lowPrice: string,
-    highPrice: string,
+    lowPrice: number,
+    highPrice: number,
     type: string,
     id: number
   ) => {
     // I'm thinking this below could be done in a more performant way, I don't like the idea of just
     // iterating through all the items when doing the id/type comparison – this will get hairy when # of items increases.
-    // I think using something like Algolia is a would be fantastic for potentially filtering/sorting hundreds (or thousands) of items
-    // otherwise, maybe would split the items up into their own "Items" components based on their type, so state for each type of item can be managed by category instead of items as a whole.
+    // Doing this again, I would split the items up into their own "Items" components based on their type, so state for each type of item can be managed by category instead of items as a whole.
     // If a follow-up interview is scheduled, I may wind up refactoring it prior to the meeting.
-
+    console.log(Number("1000.00"));
     // checking to see if the item is currently in the list of active items
     if (activeItems.includes(id)) {
       setActiveItems((activeItems) =>
         activeItems.filter((item) => item !== id)
       );
-      setHighRange(highRange - parseInt(highPrice));
-      setLowRange(lowRange - parseInt(lowPrice));
+      setHighRange(highRange - highPrice);
+      setLowRange(lowRange - lowPrice);
+      console.log(highRange);
 
       items.forEach((item: Item) => {
         if (item.id === id) {
@@ -77,8 +79,8 @@ const Budget: React.FC = () => {
       });
     } else {
       setActiveItems([...activeItems, id]);
-      setHighRange(highRange + parseInt(highPrice));
-      setLowRange(lowRange + parseInt(lowPrice));
+      setHighRange(highRange + highPrice);
+      setLowRange(lowRange + lowPrice);
 
       items.forEach((item: Item) => {
         if (item.id !== id && item.type === type) {
@@ -127,8 +129,8 @@ const Budget: React.FC = () => {
                   id={index}
                   type={item.type}
                   name={item.name}
-                  lowPrice={formatPrice(item.lowPrice)}
-                  highPrice={formatPrice(item.highPrice)}
+                  lowPrice={item.lowPrice}
+                  highPrice={item.highPrice}
                   isDisabled={item.isDisabled}
                 />
               );

@@ -1,6 +1,5 @@
-import { Grid, Typography, useTheme } from "@mui/material";
-import formatPrice from "../../utils/formatPrice";
-import React, { useState, useEffect } from "react";
+import { Grid, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import checkPriceRange from "../../utils/checkPriceRange";
 import "./styles.scss";
 
@@ -20,7 +19,7 @@ const PriceBreakdown: React.FC<Props> = ({
   // changing the budget information text whenever either price range values change
   useEffect(() => {
     setBudgetStatus(checkPriceRange(customerBudget, lowRange, highRange));
-  }, [lowRange, highRange]);
+  }, [lowRange, highRange, customerBudget]);
 
   return (
     <Grid container className="price-breakdown" direction="column">
@@ -32,11 +31,11 @@ const PriceBreakdown: React.FC<Props> = ({
 
       <Grid container direction="row" spacing={2} item>
         <Grid item>
-          <Typography variant="h5">${formatPrice(lowRange)}</Typography>
+          <Typography variant="h5">${lowRange}</Typography>
         </Grid>
         <Grid item>—</Grid>
         <Grid item>
-          <Typography variant="h5">${formatPrice(highRange)}</Typography>
+          <Typography variant="h5">${highRange}</Typography>
         </Grid>
       </Grid>
       <Grid item>
