@@ -67,7 +67,6 @@ const Budget: React.FC = () => {
       );
       setHighRange(highRange - highPrice);
       setLowRange(lowRange - lowPrice);
-      console.log(highRange);
 
       items.forEach((item: Item) => {
         if (item.id === id) {
