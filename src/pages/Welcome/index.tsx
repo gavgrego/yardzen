@@ -23,6 +23,7 @@ const Welcome: React.FC = () => {
       </Grid>
       <Grid item>
         {/* formik is a little overkill here but makes it easy to grab form values without creating more state to hold them */}
+        {/* in a larger app, would handle validation and errors more gracefully with Yup */}
         <Formik
           initialValues={{ budget: "" }}
           onSubmit={(values, { setSubmitting }) => {
