@@ -1,4 +1,4 @@
-const formatPrice = (num: number) => {
+const formatPrice = (num: number): string => {
   return (num / 100).toFixed(2);
 };
 

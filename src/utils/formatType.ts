@@ -1,4 +1,4 @@
-const formatType = (type: string) => {
+const formatType = (type: string): string => {
   return type.replaceAll("_", " ").toLowerCase();
 };
 

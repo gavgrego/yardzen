@@ -2,7 +2,7 @@ const checkPriceRange = (
   userBudget: number,
   lowRange: number,
   highRange: number
-) => {
+): string => {
   if (userBudget > lowRange && userBudget < highRange) {
     return "Congrats! You are within your budget.";
   } else if (userBudget < highRange) {
