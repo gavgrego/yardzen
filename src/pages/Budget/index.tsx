@@ -60,7 +60,6 @@ const Budget: React.FC = () => {
     // iterating through all the items when doing the id/type comparison – this will get hairy when # of items increases.
     // Doing this again, I would split the items up into their own "Items" components based on their type, so state for each type of item can be managed by category instead of items as a whole.
     // If a follow-up interview is scheduled, I may wind up refactoring it prior to the meeting.
-    console.log(Number("1000.00"));
     // checking to see if the item is currently in the list of active items
     if (activeItems.includes(id)) {
       setActiveItems((activeItems) =>
