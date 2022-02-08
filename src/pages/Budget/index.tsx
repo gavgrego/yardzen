@@ -84,11 +84,10 @@ const Budget: React.FC = () => {
       ) : (
         <>
           <Grid item>
-            <Typography variant="h4">
-              Your budget is: ${formatNumbers(userBudget)}
+            <Typography variant="h1" align="center">
+              Yardzen Budget Calculator
             </Typography>
           </Grid>
-
           {/* create groups of items based on categories */}
           {/* refactored this heavily from a previous commit */}
           <Grid item container>
@@ -109,6 +108,7 @@ const Budget: React.FC = () => {
       <Grid
         container
         justifyContent="space-between"
+        direction="column"
         className="price-breakdown"
       >
         <Grid item>
@@ -118,7 +118,7 @@ const Budget: React.FC = () => {
             highRange={highRange}
           />
         </Grid>
-        <Grid item>
+        <Grid item className="price-breakdown__button">
           <Button variant="contained" onClick={resetSelection}>
             Reset Selections
           </Button>

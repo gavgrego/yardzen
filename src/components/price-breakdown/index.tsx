@@ -41,6 +41,9 @@ const PriceBreakdown: React.FC<Props> = ({
       <Grid item>
         <Typography variant="h5">{budgetStatus}</Typography>
       </Grid>
+      <Typography variant="h5">
+        Your budget is: <strong>${formatNumbers(customerBudget)}</strong>
+      </Typography>
     </Grid>
   );
 };

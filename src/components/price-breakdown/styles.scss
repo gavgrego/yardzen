@@ -1,5 +1,10 @@
 .price-breakdown {
   margin-top: 1rem;
+
+  &__button.MuiGrid-item {
+    margin-top: 1rem;
+  }
+
   &__heading {
     margin-bottom: 1rem;
   }
