@@ -22,27 +22,23 @@ const PriceBreakdown: React.FC<Props> = ({
   }, [lowRange, highRange, customerBudget]);
 
   return (
-    <Grid container className="price-breakdown" direction="column">
-      <Grid item className="price-breakdown__heading">
-        <Typography variant="h4">
-          Your selected items have a price range of:
-        </Typography>
-      </Grid>
-
-      <Grid container direction="row" spacing={2} item>
+    <Grid container direction="column">
+      <Grid container direction="row" alignItems="center" item>
+        <Grid item className="price-breakdown__heading">
+          <Typography variant="h5">
+            Current price range of items:&nbsp;
+          </Typography>
+        </Grid>
         <Grid item>
           <Typography variant="h5">${lowRange}</Typography>
         </Grid>
-        <Grid item>—</Grid>
+        <Grid item>&nbsp;—&nbsp;</Grid>
         <Grid item>
           <Typography variant="h5">${highRange}</Typography>
         </Grid>
       </Grid>
       <Grid item>
         <Typography variant="h5">{budgetStatus}</Typography>
-      </Grid>
-      <Grid item className="price-breakdown__heading">
-        <Typography variant="h5">Your budget is ${customerBudget}</Typography>
       </Grid>
     </Grid>
   );

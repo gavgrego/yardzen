@@ -3,7 +3,14 @@ import { Formik } from "formik";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/LogoNew.png";
+import * as Yup from "yup";
 import "./styles.scss";
+
+const BudgetSchema = Yup.object().shape({
+  budget: Yup.number()
+    .required("A budget is required.")
+    .typeError("Please enter only numbers."),
+});
 
 const Welcome: React.FC = () => {
   const navigate = useNavigate();
@@ -23,9 +30,9 @@ const Welcome: React.FC = () => {
       </Grid>
       <Grid item>
         {/* formik is a little overkill here but makes it easy to grab form values without creating more state to hold them */}
-        {/* in a larger app, would handle validation and errors more gracefully with Yup */}
         <Formik
           initialValues={{ budget: "" }}
+          validationSchema={BudgetSchema}
           onSubmit={(values, { setSubmitting }) => {
             navigate("budget", { state: values.budget });
             setSubmitting(false);
@@ -37,6 +44,8 @@ const Welcome: React.FC = () => {
             handleBlur,
             handleSubmit,
             isSubmitting,
+            touched,
+            errors,
           }) => (
             <form onSubmit={handleSubmit}>
               <Grid
@@ -47,20 +56,19 @@ const Welcome: React.FC = () => {
               >
                 <Grid item>
                   <TextField
-                    required
+                    // required
                     name="budget"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.budget}
-                    inputProps={{
-                      inputMode: "numeric",
-                      pattern: "[0-9]*",
-                    }}
                     InputProps={{
                       startAdornment: "$",
                     }}
                     helperText="Please enter your budget"
                   />
+                  {errors.budget && touched.budget ? (
+                    <div style={{ color: "red" }}>{errors.budget}</div>
+                  ) : null}
                 </Grid>
 
                 <Grid item>
@@ -69,7 +77,7 @@ const Welcome: React.FC = () => {
                     type="submit"
                     disabled={isSubmitting}
                   >
-                    Submit Your Budget
+                    Submit
                   </Button>
                 </Grid>
               </Grid>

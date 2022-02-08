@@ -1,5 +1,5 @@
 import { DocumentData } from "@firebase/firestore";
-import { Button, CircularProgress, Grid } from "@mui/material";
+import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Item from "../../components/item";
@@ -19,7 +19,7 @@ const Budget: React.FC = () => {
       navigate("/");
     } else {
       // Grab items and set to state
-      // setting additional ID and isDisabled properties before setting to items state, also maniuplate item price format
+      // setting additional ID and isDisabled properties before setting to items state, also maniuplate item price format so it only needs done once
       useGetFirebase.then((items) => {
         setIsLoading(false);
         items
@@ -58,7 +58,7 @@ const Budget: React.FC = () => {
   ) => {
     // I'm thinking this below could be done in a more performant way, I don't like the idea of just
     // iterating through all the items when doing the id/type comparison – this will get hairy when # of items increases.
-    // Doing this again, I would split the items up into their own "Items" components based on their type, so state for each type of item can be managed by category instead of items as a whole.
+    // Doing this again, I would split the items up into their own "Items" components based on their type, so state for each type of item can be managed by type instead of items as a whole.
     // If a follow-up interview is scheduled, I may wind up refactoring it prior to the meeting.
     // checking to see if the item is currently in the list of active items
     if (activeItems.includes(id)) {
@@ -101,7 +101,6 @@ const Budget: React.FC = () => {
   return (
     <Grid
       sx={{ minHeight: "100vh" }}
-      justifyContent="space-between"
       container
       direction="column"
       className="budget"
@@ -109,31 +108,36 @@ const Budget: React.FC = () => {
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <Grid item container className="items">
-          {items
-            ?.sort((a, b) => (a.type > b.type ? 1 : -1))
-            .map((item: DocumentData, index: number) => {
-              return (
-                <Item
-                  handleItemToggle={() =>
-                    handleItemToggle(
-                      item.lowPrice,
-                      item.highPrice,
-                      item.type,
-                      index
-                    )
-                  }
-                  key={index}
-                  id={index}
-                  type={item.type}
-                  name={item.name}
-                  lowPrice={item.lowPrice}
-                  highPrice={item.highPrice}
-                  isDisabled={item.isDisabled}
-                />
-              );
-            })}
-        </Grid>
+        <>
+          <Grid item>
+            <Typography variant="h4">Your budget is: ${userBudget}</Typography>
+          </Grid>
+          <Grid item container className="items">
+            {items
+              ?.sort((a, b) => (a.type > b.type ? 1 : -1))
+              .map((item: DocumentData, index: number) => {
+                return (
+                  <Item
+                    handleItemToggle={() =>
+                      handleItemToggle(
+                        item.lowPrice,
+                        item.highPrice,
+                        item.type,
+                        index
+                      )
+                    }
+                    key={index}
+                    id={index}
+                    type={item.type}
+                    name={item.name}
+                    lowPrice={item.lowPrice}
+                    highPrice={item.highPrice}
+                    isDisabled={item.isDisabled}
+                  />
+                );
+              })}
+          </Grid>
+        </>
       )}
       <Grid
         container
