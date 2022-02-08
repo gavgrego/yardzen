@@ -29,7 +29,7 @@ const Welcome: React.FC = () => {
         </Typography>
       </Grid>
       <Grid item>
-        {/* formik is a little overkill here but makes it easy to grab form values without creating more state to hold them */}
+        {/* formik is a little overkill for just one field but makes it easy to grab form values without creating more state to hold them */}
         <Formik
           initialValues={{ budget: "" }}
           validationSchema={BudgetSchema}
@@ -56,7 +56,6 @@ const Welcome: React.FC = () => {
               >
                 <Grid item>
                   <TextField
-                    // required
                     name="budget"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -67,7 +66,9 @@ const Welcome: React.FC = () => {
                     helperText="Please enter your budget"
                   />
                   {errors.budget && touched.budget ? (
-                    <div style={{ color: "red" }}>{errors.budget}</div>
+                    <div style={{ color: "red", textAlign: "center" }}>
+                      {errors.budget}
+                    </div>
                   ) : null}
                 </Grid>
 
@@ -77,7 +78,7 @@ const Welcome: React.FC = () => {
                     type="submit"
                     disabled={isSubmitting}
                   >
-                    Submit
+                    Continue
                   </Button>
                 </Grid>
               </Grid>

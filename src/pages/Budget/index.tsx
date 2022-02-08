@@ -1,90 +1,64 @@
-import { DocumentData } from "@firebase/firestore";
 import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Item from "../../components/item";
+import { ItemType } from "../../components/item";
 import PriceBreakdown from "../../components/price-breakdown";
 import useGetFirebase from "../../data/useGetFirebase";
 import formatPrice from "../../utils/formatPrice";
+import formatNumbers from "../../utils/formatNumbers";
+import Items from "../../components/items";
 import "./styles.scss";
 
 const Budget: React.FC = () => {
+  // routing stuff
   const navigate = useNavigate();
   const { state } = useLocation();
-  const userBudget = state;
+  const userBudget = state as number;
+
+  const [items, setItems] = useState<ItemType[]>(); //holding items once fetched
+  const [isLoading, setIsLoading] = useState<boolean>(true); //loading state while items fetched
+  const [highRange, setHighRange] = useState<number>(0);
+  const [lowRange, setLowRange] = useState<number>(0);
+  const [activeItems, setActiveItems] = useState<Array<number>>([]);
+  const [types, setTypes] = useState<Array<any>>([]);
+  // Creating a new set from types will automatically remove duplicates giving list of types sans duplicates
+  const filteredTypes = Array.from(new Set(types));
 
   useEffect(() => {
     // if user manually enters budget url, redirect back to welcome page so they can enter a budget
     if (userBudget === null) {
       navigate("/");
     } else {
-      // Grab items and set to state
+      // Grab items from custom hook and set to state
       // setting additional ID and isDisabled properties before setting to items state, also maniuplate item price format so it only needs done once
       useGetFirebase.then((items) => {
         setIsLoading(false);
         items
           ?.sort((a, b) => (a.type > b.type ? 1 : -1))
-          .forEach((item: Item, index) => {
+          .forEach((item: ItemType, index) => {
             item.id = index;
             item.isDisabled = false;
             item.highPrice = Number(formatPrice(item.highPrice));
             item.lowPrice = Number(formatPrice(item.lowPrice));
+            setTypes((types) => [...types, item.type]);
           });
-        setItems(items);
+        setItems(items as ItemType[]);
       });
     }
   }, [navigate, userBudget]);
 
-  type Item = {
-    lowPrice: number;
-    highPrice: number;
-    id: number;
-    isDisabled: boolean;
-    name: string;
-    type: string;
-  };
-
-  const [items, setItems] = useState<DocumentData[]>(); //holding items once fetched
-  const [isLoading, setIsLoading] = useState<boolean>(true); //loading state while items fetched
-  const [highRange, setHighRange] = useState<number>(0);
-  const [lowRange, setLowRange] = useState<number>(0);
-  const [activeItems, setActiveItems] = useState<Array<number>>([]);
-
-  const handleItemToggle = (
-    lowPrice: number,
-    highPrice: number,
-    type: string,
-    id: number
-  ) => {
-    // I'm thinking this below could be done in a more performant way, I don't like the idea of just
-    // iterating through all the items when doing the id/type comparison – this will get hairy when # of items increases.
-    // Doing this again, I would split the items up into their own "Items" components based on their type, so state for each type of item can be managed by type instead of items as a whole.
-    // If a follow-up interview is scheduled, I may wind up refactoring it prior to the meeting.
-    // checking to see if the item is currently in the list of active items
-    if (activeItems.includes(id)) {
+  const handleItemToggle = (item: ItemType) => {
+    // this conditional add/removes items to activeItems and calculates price range
+    if (activeItems.includes(item.id)) {
       setActiveItems((activeItems) =>
-        activeItems.filter((item) => item !== id)
+        activeItems.filter((id) => item.id !== id)
       );
-      setHighRange(highRange - highPrice);
-      setLowRange(lowRange - lowPrice);
-
-      items.forEach((item: Item) => {
-        if (item.id === id) {
-          item.isDisabled = false;
-        } else if (item.id !== id && item.type === type) {
-          item.isDisabled = false;
-        }
-      });
+      setHighRange(highRange - item.highPrice);
+      setLowRange(lowRange - item.lowPrice);
     } else {
-      setActiveItems([...activeItems, id]);
-      setHighRange(highRange + highPrice);
-      setLowRange(lowRange + lowPrice);
-
-      items.forEach((item: Item) => {
-        if (item.id !== id && item.type === type) {
-          item.isDisabled = true;
-        }
-      });
+      setActiveItems([...activeItems, item.id]);
+      setHighRange(highRange + item.highPrice);
+      setLowRange(lowRange + item.lowPrice);
     }
   };
 
@@ -93,7 +67,7 @@ const Budget: React.FC = () => {
     setLowRange(0);
     setActiveItems([]);
 
-    items.forEach((item: Item) => {
+    items.forEach((item: ItemType) => {
       item.isDisabled = false;
     });
   };
@@ -110,32 +84,25 @@ const Budget: React.FC = () => {
       ) : (
         <>
           <Grid item>
-            <Typography variant="h4">Your budget is: ${userBudget}</Typography>
+            <Typography variant="h4">
+              Your budget is: ${formatNumbers(userBudget)}
+            </Typography>
           </Grid>
-          <Grid item container className="items">
-            {items
-              ?.sort((a, b) => (a.type > b.type ? 1 : -1))
-              .map((item: DocumentData, index: number) => {
-                return (
-                  <Item
-                    handleItemToggle={() =>
-                      handleItemToggle(
-                        item.lowPrice,
-                        item.highPrice,
-                        item.type,
-                        index
-                      )
-                    }
-                    key={index}
-                    id={index}
-                    type={item.type}
-                    name={item.name}
-                    lowPrice={item.lowPrice}
-                    highPrice={item.highPrice}
-                    isDisabled={item.isDisabled}
-                  />
-                );
-              })}
+
+          {/* create groups of items based on categories */}
+          {/* refactored this heavily from a previous commit */}
+          <Grid item container>
+            {filteredTypes.map((type, index: number) => {
+              return (
+                <Items
+                  activeItems={activeItems}
+                  handleItemToggle={(item) => handleItemToggle(item)}
+                  key={index}
+                  type={type}
+                  items={items?.filter((item) => item.type === type)}
+                />
+              );
+            })}
           </Grid>
         </>
       )}

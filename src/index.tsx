@@ -21,6 +21,7 @@ declare module "@mui/material/styles" {
   }
 }
 
+//TODO: Stick this theme config somewhere else
 const theme = createTheme({
   palette: {
     primary: {

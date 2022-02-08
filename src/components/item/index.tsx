@@ -1,16 +1,26 @@
 import { Card, Grid, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import formatType from "../../utils/formatType";
+import formatNumbers from "../../utils/formatNumbers";
 import "./styles.scss";
 
 type Props = {
   id: number;
   type: string;
   name: string;
-  lowPrice: string;
-  highPrice: string;
+  lowPrice: number;
+  highPrice: number;
   isDisabled: boolean;
-  handleItemToggle: () => void;
+  handleItemToggle?: () => void;
+};
+
+export type ItemType = {
+  lowPrice: number;
+  highPrice: number;
+  id: number;
+  isDisabled: boolean;
+  name: string;
+  type: string;
 };
 
 const Item: React.FC<Props> = ({
@@ -40,11 +50,15 @@ const Item: React.FC<Props> = ({
           </Grid>
           <Grid container item className="item-card__price-range">
             <Grid item>
-              <Typography color="primary">${lowPrice}</Typography>
+              <Typography color="primary">
+                ${formatNumbers(lowPrice)}
+              </Typography>
             </Grid>
             <Grid item>&nbsp;-&nbsp;</Grid>
             <Grid item>
-              <Typography color="primary">${highPrice}</Typography>
+              <Typography color="primary">
+                ${formatNumbers(highPrice)}
+              </Typography>
             </Grid>
           </Grid>
           <Grid item>

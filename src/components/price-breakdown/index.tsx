@@ -1,6 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import checkPriceRange from "../../utils/checkPriceRange";
+import formatNumbers from "../../utils/formatNumbers";
 import "./styles.scss";
 
 type Props = {
@@ -30,11 +31,11 @@ const PriceBreakdown: React.FC<Props> = ({
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="h5">${lowRange}</Typography>
+          <Typography variant="h5">${formatNumbers(lowRange)}</Typography>
         </Grid>
         <Grid item>&nbsp;—&nbsp;</Grid>
         <Grid item>
-          <Typography variant="h5">${highRange}</Typography>
+          <Typography variant="h5">${formatNumbers(highRange)}</Typography>
         </Grid>
       </Grid>
       <Grid item>
