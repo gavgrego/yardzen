@@ -5,4 +5,4 @@ Built using [create-react-app](https://create-react-app.dev/docs/getting-started
 - view at localhost:3000!
 
 
-Demo app showcasing some simple TypeScript with data fetched via Firebase.
+Demo app showcasing TypeScript with data fetched via Firebase.
